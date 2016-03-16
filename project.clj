@@ -26,7 +26,8 @@
                  [metosin/compojure-api "0.22.1"]
                  ; [metosin/ring-swagger-ui "2.1.1"]
                  [org.immutant/web "2.0.2"]
-                 [com.draines/postal "1.11.3"]]
+                 [com.draines/postal "1.11.3"]
+                 [ring-cors "0.1.7"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "whitecity.jar"
@@ -45,8 +46,8 @@
    :project/dev  {:dependencies [[ring/ring-mock "0.2.0"]
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.0"]]
-                  
-                  
+
+
                   :repl-options {:init-ns whitecity.core}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]

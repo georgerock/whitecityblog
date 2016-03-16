@@ -14,11 +14,11 @@
     {:info {:title "WhiteCity code blog API"}
      :produces ['application/json']
      :consumes ['application/json']})
-  
+
   (POST* "/contact" []
          :body     [contact {:name String, :email String, :msg String}]
          (when-let [{:keys [name email msg]} contact]
-            (let [{:keys [code error message]} 
+            (let [{:keys [code error message]}
               (send-message {:host (get @settings "smtp-host")
                              :user (get @settings "smtp-user")
                              :pass (get @settings "smtp-pass")
@@ -32,19 +32,19 @@
              (if (== code 0)
                (ok message)
                (status 500)))))
-
+  (OPTIONS* "*" [] (ok "CORS enabled"))         
   (GET* "/blogposts/:slug" [slug]
         :return      (s/maybe BlogPost)
         :path-params [slug :- String]
         :summary     "Retrieve a blog post by slug"
         (let [files (get-md-files (get @settings "md-folder"))
-              postFile (get-post-file slug files)] 
-          (when (not (nil? postFile)) 
+              postFile (get-post-file slug files)]
+          (when (not (nil? postFile))
             (ok (get-article postFile)))))
-  
+
   (GET* "/blogposts" [page]
         :return       Blog
         :query-params [{page :- Long 0}]
         :summary      "Retrieve a list of 9 blog posts per page starting with page {page}"
-        (let [pages  (get-file-pages (get-md-files (get @settings "md-folder")))] 
+        (let [pages  (get-file-pages (get-md-files (get @settings "md-folder")))]
           (ok (get-blog page pages)))))

@@ -8,7 +8,8 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.format :refer [wrap-restful-format]]
-            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]))
+            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
+            [ring.middleware.cors :refer [wrap-cors]]))
 
 (defn wrap-internal-error [handler]
   (fn [req]
@@ -21,6 +22,8 @@
 (defn wrap-dev [handler]
   (if (env :dev)
     (-> handler
+        (wrap-cors :access-control-allow-origin [#".*"]
+                   :access-control-allow-methods [:get])
         reload/wrap-reload
         wrap-exceptions)
     handler))
